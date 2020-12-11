@@ -40,22 +40,23 @@ t08<-data.frame(texts=t08)
 t09<-data.frame(texts=t09)
 t10<-data.frame(texts=t10)
 
-prologus<-data.frame(texts=prologus)
-historia_g<-data.frame(texts=historia_g)
-recapitulatio<-data.frame(texts=recapitulatio)
-historia_w<-data.frame(texts=historia_w)
-historia_s<-data.frame(texts=historia_s)
 
-prologus$book<-"01 Prologus"
-historia_g$book<-"02 Historia Gothorum"
-recapitulatio$book<-"03 Recapitulatio"
-historia_w$book<-"04 Historia Wandalorum"
-historia_s$book<-"05 Historia Suevorum"
+t00$book<-"Praefatio"
+t01$book<-"Liber 01"
+t02$book<-"Liber 02"
+t03$book<-"Liber 03"
+t04$book<-"Liber 04"
+t05$book<-"Liber 05"
+t06$book<-"Liber 06"
+t07$book<-"Liber 07"
+t08$book<-"Liber 08"
+t09$book<-"Liber 09"
+t10$book<-"Liber 10"
 
 
-historia<-rbind(prologus,historia_g,recapitulatio,historia_w,historia_s)
+historia<-rbind(t00,t01,t02,t03,t04,t05,t06,t07,t08,t09,t10)
 
-#historia$texts <- stripWhitespace(historia$texts)
+historia$texts <- stripWhitespace(historia$texts)
 historia$texts <- tolower(historia$texts)
 historia$texts <- removePunctuation(historia$texts)
 historia$texts <- removeNumbers(historia$texts)
