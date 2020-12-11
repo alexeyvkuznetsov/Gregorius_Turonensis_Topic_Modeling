@@ -10,7 +10,6 @@
 #####################################################################################
 
 
-
 setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
 
 library(textmineR)
