@@ -253,7 +253,7 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
   geom_point() +
   geom_line(group = 1)+
   ggtitle("Оптимальное количество тем (k)") + theme_minimal() +
-  scale_x_continuous(breaks = seq(1,15,1)) + ylab("Когерентность тем")
+  scale_x_continuous(breaks = seq(0,40,5)) + ylab("Когерентность тем")
 
 
 
