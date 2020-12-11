@@ -1,3 +1,16 @@
+
+#####################################################################################
+#####################################################################################
+##  The computer analysis of Latin texts:                                          ##
+##  Gregorius_Turonensis_Topic_Modeling.                                           ##
+##  Author: Alexey Kuznetsov                                                       ##
+##  URL: https://github.com/alexeyvkuznetsov/Gregorius_Turonensis_Topic_Modeling   ##
+##       https://alexeyvkuznetsov.github.io                                        ##
+#####################################################################################
+#####################################################################################
+
+
+
 setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
 
 library(textmineR)
@@ -61,6 +74,43 @@ historia$texts <- tolower(historia$texts)
 historia$texts <- removePunctuation(historia$texts)
 historia$texts <- removeNumbers(historia$texts)
 
+
+#########################################################################
+### REMOVE STOPWORDS                                                  ###
+#########################################################################
+
+#rome_number<-paste(scan(file ="rom number 1000.txt",what='character'),collapse=" ")
+#rome_number<-tolower(rome_number)
+#rome_number
+#write(rome_number, file="rome_number_v.txt")
+
+
+
+load("rome_number_1000.Rda")
+
+customStopWords <- c("ann", "annus", "aer", "aes", "aera", "num._rom.", "xnum._rom.", "xxnum._rom.", "xxxnum._rom.", "cdxlnum._rom.")
+
+lat_stop_perseus <- c("ab", "ac", "ad", "adhic", "aliqui", "aliquis", "an", "ante", "apud", "at", "atque", "aut", "autem", "cum", "cur", "de", "deinde", "dum", "ego", "enim", "ergo", "es", "est", "et", "etiam", "etsi", "ex", "fio", "haud", "hic", "iam", "idem", "igitur", "ille", "in", "infra", "inter", "interim", "ipse", "is", "ita", "magis", "modo", "mox", "nam", "ne", "nec", "necque", "neque", "nisi", "non", "nos", "o", "ob", "per", "possum", "post", "pro", "quae", "quam", "quare", "qui", "quia", "quicumque", "quidem", "quilibet", "quis", "quisnam", "quisquam", "quisque", "quisquis", "quo", "quoniam", "sed", "si", "sic", "sive", "sub", "sui", "sum", "super", "suus", "tam", "tamen", "trans", "tu", "tum", "ubi", "uel", "uero", "unus", "ut", "quoque", "xiix")
+
+#save(lat_stop_perseus,file="lat_stop_perseus.Rda")
+
+#load("lat_stop_perseus.Rda")
+
+#MyStopwords <- c(lat_stop_perseus, customStopWords, lat_stopwords_romnum)
+
+MyStopwords <- c(lat_stop_perseus, rome_number_1000, customStopWords)
+
+#historia$texts <- removeWords(historia$texts, c(lat_stop_perseus, rome_number_1000))
+
+historia$texts <- removeWords(historia$texts, MyStopwords)
+
+historia$texts <- stripWhitespace(historia$texts)
+
+
+#########################################################################
+### UDPipe ANNOTATION                                                 ###
+### http://ufal.mff.cuni.cz/udpipe/models/                            ###
+#########################################################################
 
 
 # UDPipe annotation
