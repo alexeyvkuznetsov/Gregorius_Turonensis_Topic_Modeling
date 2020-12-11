@@ -1,4 +1,4 @@
-setwd("D:/GitHub/Latin_Text_Topic_Modeling/")
+setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
 
 library(textmineR)
 library(igraph)
@@ -6,6 +6,15 @@ library(ggraph)
 library(ggplot2)
 library(tm)
 library(udpipe)
+
+library(tm)
+library(XML)
+library(RCurl)
+library(plyr)
+library(lda)
+library(LDAvis)
+library(compiler)
+
 
 prologus<-paste(scan(file ="files/01 prologus.txt",what='character'),collapse=" ")
 historia_g<-paste(scan(file ="files/02 historia_g.txt",what='character'),collapse=" ")
