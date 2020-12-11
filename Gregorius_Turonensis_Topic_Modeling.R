@@ -146,11 +146,60 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 
 
+
+
+
+
+# Fit a Latent Dirichlet Allocation model
+# note the number of topics is arbitrary here
+# see extensions for more info
+# https://cran.r-project.org/web/packages/textmineR/vignettes/c_topic_modeling.html
+
+set.seed(12345)
+
+model <- FitLdaModel(dtm = dtm, 
+                     k = 20,
+                     iterations = 300, # I usually recommend at least 500 iterations or more
+                     burnin = 180,
+                     alpha = 0.1,
+                     beta = 0.05,
+                     optimize_alpha = TRUE,
+                     calc_likelihood = TRUE,
+                     calc_coherence = TRUE,
+                     calc_r2 = TRUE,
+                     cpus = 2) 
+
+
+
+
+# R-squared 
+# - only works for probabilistic models like LDA and CTM
+model$r2
+#> [1] 0.2747765
+
+# log Likelihood (does not consider the prior) 
+plot(model$log_likelihood, type = "l")
+
+
+# probabilistic coherence, a measure of topic quality
+# this measure can be used with any topic model, not just probabilistic ones
+summary(model$coherence)
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>  0.0060  0.1188  0.1543  0.1787  0.2187  0.4117
+
+hist(model$coherence, 
+     col= "blue", 
+     main = "Histogram of probabilistic coherence")
+
+
+
+
+
 # Coherence score for topics
 
 k_list <- seq(2,15, by=1)
 
-model_dir <- paste0("models_", digest::digest(colnames(dtm), algo = "sha1"))
+model_dir <- paste0("models", digest::digest(colnames(dtm), algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
 
 
@@ -171,6 +220,29 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
   m
 }, export= c("dtm"), 
 cpus = 2)
+
+
+topics_list <- seq(1, 20, by = 1)
+
+tunable_lda_list <- TmParallelApply(X = topics_list, FUN = function(k){
+  filename = file.path(model_dir, paste0(k, "_lda_topics.rda"))
+  
+  if (!file.exists(filename)) {
+    lda_model <- FitLdaModel(dtm = dtm, k = k, iterations = 1000)
+    lda_model$k <- k
+    lda_model$topic_coherence <- CalcProbCoherence(phi = lda_model$phi, dtm = dtm, M = 5)
+    save(lda_model, file = filename)
+  } else {
+    load(filename)
+  }
+  lda_model
+}, export=c("dtm", "model_dir")) 
+
+
+coherence_mat <- data.frame(k = sapply(tunable_lda_list, function(x) nrow(x$phi)), 
+                            coherence = sapply(tunable_lda_list, function(x) mean(x$coherence)), 
+                            stringsAsFactors = FALSE)
+
 
 
 coherence_mat <- data.frame(k = sapply(model_list, function(x) nrow(x$phi)), 
