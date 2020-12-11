@@ -138,7 +138,7 @@ head(dtf)
 
 dtm <- document_term_matrix(x = dtf)
 
-dtm <- dtm_remove_lowfreq(dtm, minfreq = 4)
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 2)
 
 head(dtm_colsums(dtm))
 
@@ -148,7 +148,7 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 # Coherence score for topics
 
-k_list <- seq(1,15, by=1)
+k_list <- seq(2,15, by=1)
 
 model_dir <- paste0("models_", digest::digest(colnames(dtm), algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
