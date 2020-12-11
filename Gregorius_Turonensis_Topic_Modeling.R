@@ -262,7 +262,7 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
 
 library(topicmodels)
 
-topicModel <- topicmodels::LDA(dtm, k = 4, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.1))
+topicModel <- topicmodels::LDA(dtm, k = 24, method = "Gibbs", control = list(nstart = 5, iter = 2500, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.1))
 
 topics(topicModel)
 
@@ -297,9 +297,9 @@ td_beta %>%
 ### Topic proportions https://tm4ss.github.io/docs/Tutorial_6_Topic_Models.html
 
 
-textIds <- c(1, 2, 3, 4, 5)
+textIds <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
 
-lapply(fivebooks$texts[textIds], as.character)
+lapply(historia$texts[textIds], as.character)
 
 tmResult <- posterior(topicModel)
 
@@ -317,7 +317,7 @@ library("ggplot2")
 
 # get topic proportions form example documents
 
-N <- 5
+N <- 11
 
 topicProportionExamples <- theta[textIds,]
 colnames(topicProportionExamples) <- topicNames
