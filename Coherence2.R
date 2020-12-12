@@ -9,7 +9,7 @@ library(tm)
 library(udpipe)
 
 
-#load("historia_annotated_dataset.Rda")
+load("historia_annotated_dataset.Rda")
 
 
 
@@ -34,14 +34,20 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 vocabulary <- dtf$term[ dtf$term_freq > 1 & dtf$doc_freq < nrow(dtm) / 2 ]
 
-k_list <- seq(2, 30, by = 1)
+k_list <- seq(2, 40, by = 1)
 model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
   filename = file.path(model_dir, paste0(k, "_topics.rda"))
   
   if (!file.exists(filename)) {
-    m <- FitLdaModel(dtm = dtm, k = k, alpha = 0.1, beta = 0.1, burnin = 500, best = TRUE, iterations = 1000)
+    m <- FitLdaModel(dtm = dtm, 
+                     k = k, 
+                     alpha = 30/k, 
+                     beta = 0.1, 
+                     burnin = 500, 
+                     best = TRUE, 
+                     iterations = 4000)
     m$k <- k
     m$coherence <- CalcProbCoherence(phi = m$phi, dtm = dtm, M = 5)
     save(m, file = filename)

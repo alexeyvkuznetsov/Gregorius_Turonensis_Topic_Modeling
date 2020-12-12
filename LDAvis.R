@@ -45,3 +45,41 @@ documents <- lapply(doc.list, get.terms)
 
 
 
+
+
+# https://github.com/christopherlovell/speech-analysis/blob/master/topicmodelling.R
+# filter out low scoring tf-idf terms
+tfidf.scores <- colSums(as.matrix(tm::weightTfIdf(dtm)))
+dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.3)]
+
+# convert to matrix to allow row and column sums to be calculated
+td.mat <- as.matrix(dtm)
+
+topic.no <- 28
+
+lda <- topicmodels::LDA(dtm, k = topic.no, method = "Gibbs")
+
+phi <- posterior(lda)$terms
+theta <- posterior(lda)$topics
+doc.length <- rowSums(td.mat)
+term.frequency <- colSums(td.mat)
+vocab <- tm::Terms(dtm)
+
+
+LDAvis.json <- LDAvis::createJSON(phi = phi,
+                                  theta = theta,
+                                  doc.length = doc.length,
+                                  vocab = vocab,
+                                  term.frequency = term.frequency)
+
+LDAvis::serVis(LDAvis.json)
+
+save(LDAvis.json, file = "ldavis.RData")
+
+#save.image("image.RData")
+#load("image.RData")
+
+#rm(phi,theta,doc.length,term.frequency,vocab,not,lda,LDAvis.json,td.mat)
+#write.table(LDAvis.json[[1]],file = "topics.json")
+
+
