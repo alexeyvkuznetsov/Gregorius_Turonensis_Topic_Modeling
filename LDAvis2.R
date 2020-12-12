@@ -92,3 +92,24 @@ json <- createJSON(
 )
 serVis(json, out.dir = 'vis', 
        open.browser = FALSE)
+
+
+
+
+
+
+
+
+# convert to matrix to allow row and column sums to be calculated
+td.mat <- as.matrix(dtm)
+
+topic.no <- 18
+
+lda <- topicmodels::LDA(dtm, k = topic.no, method = "Gibbs")
+
+phi <- posterior(lda)$terms
+theta <- posterior(lda)$topics
+doc.length <- rowSums(td.mat)
+term.frequency <- colSums(td.mat)
+vocab <- tm::Terms(dtm)
+
