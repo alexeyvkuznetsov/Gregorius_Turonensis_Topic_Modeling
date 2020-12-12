@@ -41,7 +41,7 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
   filename = file.path(model_dir, paste0(k, "_topics.rda"))
   
   if (!file.exists(filename)) {
-    m <- FitLdaModel(dtm = dtm, k = k, alpha = 50/k, beta = 0.1, burnin = 500, best = TRUE, iterations = 1000)
+    m <- FitLdaModel(dtm = dtm, k = k, alpha = 0.1, beta = 0.1, burnin = 500, best = TRUE, iterations = 1000)
     m$k <- k
     m$coherence <- CalcProbCoherence(phi = m$phi, dtm = dtm, M = 5)
     save(m, file = filename)
@@ -64,3 +64,6 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
   geom_line(group = 1)+
   ggtitle("Оптимальное количество тем (k)") + theme_minimal() +
   scale_x_continuous(breaks = seq(1,30,1)) + ylab("Когерентность тем")
+
+
+#alpha = 50/k
