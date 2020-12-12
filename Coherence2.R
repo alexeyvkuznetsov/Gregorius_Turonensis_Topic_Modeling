@@ -22,7 +22,7 @@ head(dtf)
 
 dtm <- document_term_matrix(x = dtf)
 
-dtm <- dtm_remove_lowfreq(dtm, minfreq = 2)
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 
 head(dtm_colsums(dtm))
 
@@ -43,9 +43,11 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
   if (!file.exists(filename)) {
     m <- FitLdaModel(dtm = dtm, 
                      k = k, 
-                     alpha = 30/k, 
+                     method = "Gibbs",
+                     alpha = 0.2, 
                      beta = 0.1, 
-                     burnin = 500, 
+                     burnin = 100,
+                     seed = 1:5,
                      best = TRUE, 
                      iterations = 4000)
     m$k <- k
@@ -73,3 +75,36 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
 
 
 #alpha = 50/k
+
+
+
+
+
+# Topic modeling
+
+library(topicmodels)
+
+topicModel <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 2.6))
+
+topics(topicModel)
+
+
+
+library("ldatuning")
+
+result <- FindTopicsNumber(
+  dtm,
+  topics = seq(from = 2, to = 25, by = 1),
+  metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+  method = "Gibbs",
+  control = list(seed = 77, alpha = 0.2),
+  mc.cores = 2L,
+  verbose = TRUE
+)
+
+
+FindTopicsNumber_plot(result)
+
+
+
+

@@ -1,4 +1,7 @@
 
+# https://ldavis.cpsievert.me/reviews/reviews.html
+# https://www.r-bloggers.com/2016/06/ldavis-show-case-on-r-bloggers/
+
 library(devtools)
 devtools::install_github("cpsievert/LDAvisData")
 
@@ -55,15 +58,16 @@ dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.3)]
 # convert to matrix to allow row and column sums to be calculated
 td.mat <- as.matrix(dtm)
 
-topic.no <- 28
+topic.no <- 19
 
-lda <- topicmodels::LDA(dtm, k = topic.no, method = "Gibbs")
+lda <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.2))
 
 phi <- posterior(lda)$terms
 theta <- posterior(lda)$topics
 doc.length <- rowSums(td.mat)
 term.frequency <- colSums(td.mat)
 vocab <- tm::Terms(dtm)
+
 
 
 LDAvis.json <- LDAvis::createJSON(phi = phi,
