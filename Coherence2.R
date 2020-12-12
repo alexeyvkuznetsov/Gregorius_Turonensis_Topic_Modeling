@@ -34,7 +34,7 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 vocabulary <- dtf$term[ dtf$term_freq > 1 & dtf$doc_freq < nrow(dtm) / 2 ]
 
-k_list <- seq(2, 30, by = 1)
+k_list <- seq(2, 25, by = 1)
 model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
