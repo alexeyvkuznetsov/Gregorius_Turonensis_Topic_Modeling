@@ -27,7 +27,7 @@ library(lda)
 library(LDAvis)
 library(compiler)
 
-t00<-paste(scan(file ="files/00.txt",what='character'),collapse=" ")
+#t00<-paste(scan(file ="files/00.txt",what='character'),collapse=" ")
 t01<-paste(scan(file ="files/01.txt",what='character'),collapse=" ")
 t02<-paste(scan(file ="files/02.txt",what='character'),collapse=" ")
 t03<-paste(scan(file ="files/03.txt",what='character'),collapse=" ")
@@ -40,7 +40,7 @@ t09<-paste(scan(file ="files/09.txt",what='character'),collapse=" ")
 t10<-paste(scan(file ="files/10.txt",what='character'),collapse=" ")
 
 
-t00<-data.frame(texts=t00)
+#t00<-data.frame(texts=t00)
 t01<-data.frame(texts=t01)
 t02<-data.frame(texts=t02)
 t03<-data.frame(texts=t03)
@@ -53,7 +53,7 @@ t09<-data.frame(texts=t09)
 t10<-data.frame(texts=t10)
 
 
-t00$book<-"Praefatio"
+#t00$book<-"Praefatio"
 t01$book<-"Liber 01"
 t02$book<-"Liber 02"
 t03$book<-"Liber 03"
@@ -66,7 +66,7 @@ t09$book<-"Liber 09"
 t10$book<-"Liber 10"
 
 
-historia<-rbind(t00,t01,t02,t03,t04,t05,t06,t07,t08,t09,t10)
+historia<-rbind(t01,t02,t03,t04,t05,t06,t07,t08,t09,t10)
 
 historia$texts <- stripWhitespace(historia$texts)
 historia$texts <- tolower(historia$texts)

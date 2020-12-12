@@ -1,4 +1,34 @@
 
+setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
+
+library(textmineR)
+library(igraph)
+library(ggraph)
+library(ggplot2)
+library(tm)
+library(udpipe)
+
+
+#load("historia_annotated_dataset.Rda")
+
+
+
+dtf <- subset(x, upos %in% c("NOUN"))
+
+dtf <- document_term_frequencies(dtf, document = "doc_id", term = "lemma")
+
+head(dtf)
+
+
+dtm <- document_term_matrix(x = dtf)
+
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 2)
+
+head(dtm_colsums(dtm))
+
+dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
+
+
 
 # https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25
 
