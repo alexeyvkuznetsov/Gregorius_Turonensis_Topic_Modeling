@@ -34,7 +34,7 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 vocabulary <- dtf$term[ dtf$term_freq > 1 & dtf$doc_freq < nrow(dtm) / 2 ]
 
-k_list <- seq(2, 40, by = 1)
+k_list <- seq(2, 30, by = 1)
 model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
@@ -44,7 +44,7 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
     m <- FitLdaModel(dtm = dtm, 
                      k = k, 
                      method = "Gibbs",
-                     alpha = 0.2, 
+                     alpha = 0.02, 
                      beta = 0.1, 
                      burnin = 100,
                      seed = 1:5,
@@ -84,7 +84,7 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
 
 library(topicmodels)
 
-topicModel <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 2.6))
+topicModel <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.02))
 
 topics(topicModel)
 
