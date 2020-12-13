@@ -63,6 +63,7 @@ lda_model$get_top_words(n = 10, topic_number = c(1L, 5L, 10L), lambda = 0.2)
 
 perplexity(new_dtm, topic_word_distribution = lda_model$topic_word_distribution, doc_topic_distribution = new_doc_topic_distr)
 
+
 lda_model$plot()
 
 
