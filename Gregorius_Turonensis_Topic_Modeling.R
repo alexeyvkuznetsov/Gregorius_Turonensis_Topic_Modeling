@@ -18,6 +18,7 @@ library(ggraph)
 library(ggplot2)
 library(tm)
 library(udpipe)
+library(text2vec)
 
 library(tm)
 library(XML)
@@ -138,7 +139,7 @@ head(dtf)
 
 dtm <- document_term_matrix(x = dtf)
 
-dtm <- dtm_remove_lowfreq(dtm, minfreq = 2)
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 
 head(dtm_colsums(dtm))
 
@@ -265,6 +266,20 @@ library(topicmodels)
 topicModel <- topicmodels::LDA(dtm, k = 15, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
 
 topics(topicModel)
+
+
+
+
+lda_model <- topicmodels::LDA(dtm, k = 15, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+
+doc_topic_distr =
+  lda_model$fit_transform(x = dtm, n_iter = 1000, 
+                          convergence_tol = 0.001, n_check_convergence = 25, 
+                          progressbar = TRUE)
+
+
+
+lda_model$plot()
 
 
 # Topics vizualization
