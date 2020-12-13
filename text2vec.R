@@ -31,6 +31,10 @@ lsa = LSA$new(n_topics = 10)
 doc_embeddings =  fit_transform(dtm, tfidf)
 doc_embeddings =  fit_transform(doc_embeddings, lsa)
 
+
+
+# LDA
+
 tokens = tolower(movie_review$review[1:4000])
 tokens = word_tokenizer(tokens)
 it = itoken(tokens, ids = movie_review$id[1:4000], progressbar = FALSE)
@@ -60,5 +64,51 @@ lda_model$get_top_words(n = 10, topic_number = c(1L, 5L, 10L), lambda = 0.2)
 perplexity(new_dtm, topic_word_distribution = lda_model$topic_word_distribution, doc_topic_distribution = new_doc_topic_distr)
 
 lda_model$plot()
+
+
+
+# http://datacm.blogspot.com/2017/03/lda-visualization-with-r-topicmodels.html
+
+topic_res <- LDA(dtm, 25)
+Terms <- terms(topic_res, 10)
+Terms
+
+
+#' Convert the output of a topicmodels Latent Dirichlet Allocation to JSON
+#' for use with LDAvis
+#'
+#' @param fitted Output from a topicmodels \code{LDA} model.
+#' @param doc_term The document term matrix used in the \code{LDA}
+#' model. This should have been created with the tm package's
+#' \code{DocumentTermMatrix} function.
+#'
+#' @seealso \link{LDAvis}.
+#' @export
+
+topicmodels_json_ldavis <- function(fitted, doc_term){
+  require(LDAvis)
+  require(slam)
+  
+  # Find required quantities
+  phi <- as.matrix(posterior(fitted)$terms)
+  theta <- as.matrix(posterior(fitted)$topics)
+  vocab <- colnames(phi)
+  term_freq <- slam::col_sums(doc_term)
+  
+  # Convert to json
+  json_lda <- LDAvis::createJSON(phi = phi, theta = theta,
+                                 vocab = vocab,
+                                 doc.length = as.vector(table(doc_term$i)),
+                                 term.frequency = term_freq)
+  
+  return(json_lda)
+}
+
+
+json_res <- topicmodels_json_ldavis(topic_res, cp, dtm)
+
+serVis(json_res)
+
+
 
 
