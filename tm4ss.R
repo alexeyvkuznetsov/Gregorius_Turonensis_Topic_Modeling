@@ -53,6 +53,18 @@ textdata <- textdata[sel_idx, ]
 
 
 
+# load package topicmodels
+require(topicmodels)
+# number of topics
+K <- 20
+# compute the LDA model, inference via n iterations of Gibbs sampling
+topicModel <- LDA(DTM, K, method="Gibbs", control=list(iter = 500, seed = 1, verbose = 25))
+
+# have a look a some of the results (posterior distributions)
+tmResult <- posterior(topicModel)
+# format of the resulting object
+attributes(tmResult)
+
 
 
 
