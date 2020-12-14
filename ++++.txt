@@ -21,6 +21,12 @@ https://github.com/juansokil/LatinR_2019/blob/master/02-Scripts/01-Topic%20Model
 
 
 
+https://github.com/stricje1/VIT_University/blob/master/Data_Analytics_2018/code/topicmodels2LDAvis.R
+
+
+
+
+
 
 https://tm4ss.github.io/docs/Tutorial_6_Topic_Models.html
 
