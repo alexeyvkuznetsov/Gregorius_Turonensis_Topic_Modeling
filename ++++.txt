@@ -1,9 +1,14 @@
-
+п»ї
 
 Topic Models Learning and R Resources
-функции
+С„СѓРЅРєС†РёРё
 
 https://github.com/trinker/topicmodels_learning
 https://github.com/trinker/topicmodels_learning/blob/master/functions/topicmodels2LDAvis.R
 https://github.com/trinker/topicmodels_learning/blob/master/functions/optimal_k.R
+
+
+
+
+https://github.com/marcoguerzoni/jelcodes3
 
