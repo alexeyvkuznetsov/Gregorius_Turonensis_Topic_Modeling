@@ -1,0 +1,124 @@
+---
+title: "Тематисемкое моделирование "Истории франков" Григория Турского"
+output:
+  html_document:
+    df_print: paged
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
+
+library(textmineR)
+library(igraph)
+library(ggraph)
+library(ggplot2)
+library(tm)
+library(udpipe)
+library(LDAvis)
+```
+
+
+```{r}
+load("historia_annotated_dataset.Rda")
+```
+
+
+
+```{r}
+dtf <- subset(x, upos %in% c("NOUN"))
+dtf <- document_term_frequencies(dtf, document = "doc_id", term = "lemma")
+#head(dtf)
+
+dtm <- document_term_matrix(x = dtf)
+dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
+#head(dtm_colsums(dtm))
+
+# ДОРАБОТАТЬ
+#dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
+
+```
+
+
+
+```{r}
+#########################################################################
+### TOPIC MODELING                                                    ###
+#########################################################################
+#library(topicmodels)
+lda_model <- topicmodels::LDA(dtm, k = 18, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+
+```
+
+
+```{r}
+#########################################################################
+### TOPIC VISUALISATION                                               ###
+#########################################################################
+library(tidytext)
+library(ggplot2)
+library(dplyr)
+topicModel = lda_model
+td_beta <- tidy(topicModel)
+td_beta %>%
+  group_by(topic) %>%
+  top_n(6, beta) %>%
+  ungroup() %>%
+  mutate(topic = paste0("Topic ", topic),
+         term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(term, beta, fill = as.factor(topic))) +
+  geom_col(alpha = 0.8, show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip() +
+  scale_x_reordered() +
+  labs(x = NULL, y = expression(beta),
+       title = "Наиболее часто встречающиеся слова для каждой темы")
+
+```
+
+
+
+
+
+```{r}
+#########################################################################
+### LDAvis VISUALISATION                                              ###
+#########################################################################
+# https://github.com/love-borjeson/tm_ws_cloud/blob/master/3_ling_filter.R
+# udpipe + LDAvis
+
+
+
+topicmodels2LDAvis <- function(x, ...){
+  post <- topicmodels::posterior(x)
+  if (ncol(post[["topics"]]) < 3) stop("The model must contain > 2 topics")
+  mat <- x@wordassignments
+  LDAvis::createJSON(
+    phi = post[["terms"]], 
+    theta = post[["topics"]],
+    vocab = colnames(post[["terms"]]),
+    doc.length = slam::row_sums(mat, na.rm = TRUE),
+    term.frequency = slam::col_sums(mat, na.rm = TRUE)
+  )
+}
+
+require(LDAvis)
+
+#serVis(topicmodels2LDAvis(lda_model),  out.dir = 'LDAvis', open.browser = interactive())
+
+serVis(topicmodels2LDAvis(lda_model))
+#servr::daemon_stop(1) # to stop the server 
+```
+
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

@@ -45,3 +45,28 @@ http://text2vec.org/topic_modeling.html#topic=0&lambda=0.5&term=
 
 perplexity
 https://cfss.uchicago.edu/notes/topic-modeling/
+
+
+Кластеризация
+https://www.machinelearningmastery.ru/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25/
+
+
+
+
+LDAvis +json
+
+https://issue.life/questions/52268925
+
+
+https://fooobar.com/questions/16022640/embed-ldavis-output-to-rmarkdown
+
+<iframe width="1200" height="1500" src="a/index.html" frameborder="0"></iframe>
+
+
+
+
+https://alexeyvkuznetsov.github.io/blob/master/LDAvis/#topic=1&lambda=0.8&term=
+
+alexeyvkuznetsov.github.io/assets/ldavis/index.html
+
+alexeyvkuznetsov.github.io/assets/ldavis/#topic=1&lambda=1&term=
