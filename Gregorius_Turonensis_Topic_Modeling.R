@@ -149,6 +149,63 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes
 
 
 
+#remodel
+library(topicmodels)
+k = 19
+
+#the sampler, as before
+controlGibbs <- list(seed = 5683, #what does this mean?
+                     burnin = 200,
+                     iter = 500)
+
+
+lda_model <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+
+
+
+model4 <- LDA(dtmKW, k, method = "Gibbs", control = controlGibbs) #Model...
+terms(model4,10) #Looks ok.
+#To fine-tune and add a (short) stoplist, use LDAvis as before.
+dtmKW <- dtm_remove_terms(dtmKW, terms = c("wtfe")) #This is what we need to develop.
+#remodel.....
+# and then visualize. If you do, you will notice that the LDA is symmetric with this approach as well.
+
+require(LDAvis)
+
+topicmodels2LDAvis <- function(x, ...){
+  post <- topicmodels::posterior(x)
+  if (ncol(post[["topics"]]) < 3) stop("The model must contain > 2 topics")
+  mat <- x@wordassignments
+  LDAvis::createJSON(
+    phi = post[["terms"]], 
+    theta = post[["topics"]],
+    vocab = colnames(post[["terms"]]),
+    doc.length = slam::row_sums(mat, na.rm = TRUE),
+    term.frequency = slam::col_sums(mat, na.rm = TRUE)
+  )
+}
+serVis(topicmodels2LDAvis(lda_model))
+
+#servr::daemon_stop(1) # to stop the server 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

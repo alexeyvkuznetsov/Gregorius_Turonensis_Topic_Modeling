@@ -1,3 +1,7 @@
+
+setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/cloud/")
+
+
 #clean slate...:
 rm(list = ls())
 
@@ -63,7 +67,7 @@ x$term <- ifelse(x$upos %in% c("NOUN", "ADJ"), x$term,
                  #Cf https://universaldependencies.org/u/pos/index.html
 
 # Build document/term/matrix
-dtf <- document_term_frequencies(x, document = "doc_id", term = "term") #model on docs.
+dtf <- document_term_frequencies(x, document = "doc_id", term = "lemma") #model on docs.
 dtf$term <- gsub(" ", "_", dtf$term, fixed = TRUE) #Whitestrips to underscore
 dtf$term <- gsub('\\b\\w{1,2}\\b','',dtf$term) #wordlengts
 dtf$term <- gsub('\\b\\w{150,}\\b','',dtf$term) #wordlengts, longer since we have keywords
@@ -71,7 +75,7 @@ dtf$term <- gsub(" ", "", dtf$term, fixed = TRUE) #Whitestrips removal
 dtf <- dtf[!(is.na(dtf$term) | dtf$term==""), ] #remove empty rows
 dtmKW <- document_term_matrix(x = dtf) #Save as dtm
 dtmKW <- dtm_remove_lowfreq(dtmKW, minfreq = 3) #This is the direct method to trim the dtm.
-saveRDS(dtmKW, file = "dtmKW.rds")
+#saveRDS(dtmKW, file = "dtmKW.rds")
 
 ###############################For reference!
 #A more dynamic approach is to use tf-idf, see below (just un-comment).
