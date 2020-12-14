@@ -137,6 +137,7 @@ dtf <- document_term_frequencies(dtf, document = "doc_id", term = "lemma")
 head(dtf)
 
 
+
 dtm <- document_term_matrix(x = dtf)
 
 dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
