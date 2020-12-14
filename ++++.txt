@@ -17,3 +17,25 @@ https://github.com/marcoguerzoni/jelcodes3
 https://github.com/juansokil/LatinR_2019
 https://github.com/juansokil/LatinR_2019/blob/master/02-Scripts/01-Topic%20Modelling.R
 
+
+
+
+
+
+https://tm4ss.github.io/docs/Tutorial_6_Topic_Models.html
+
+https://www.tidytextmining.com/topicmodeling.html
+
+
+https://ldavis.cpsievert.me/reviews/reviews.html
+
+
+https://knowledger.rbind.io/post/topic-modeling-using-r/
+
+
+http://text2vec.org/topic_modeling.html#topic=0&lambda=0.5&term=
+
+
+
+perplexity
+https://cfss.uchicago.edu/notes/topic-modeling/
