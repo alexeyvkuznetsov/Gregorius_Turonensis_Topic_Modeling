@@ -186,9 +186,33 @@ topicmodels2LDAvis <- function(x, ...){
 }
 serVis(topicmodels2LDAvis(lda_model))
 
+###Visualizar####
+serVis(topicmodels2LDAvis(lda_model),  out.dir = 'LDAvis', open.browser = interactive())
+
 #servr::daemon_stop(1) # to stop the server 
 
 
+
+#################LDA VIS##################
+
+#' Transform Model Output for Use with the LDAvis Package
+topicmodels2LDAvis <- function(x, ...){
+  post <- topicmodels::posterior(x)
+  if (ncol(post[["topics"]]) < 3) stop("The model must contain > 2 topics")
+  mat <- x@wordassignments
+  LDAvis::createJSON(
+    phi = post[["terms"]], 
+    theta = post[["topics"]],
+    vocab = colnames(post[["terms"]]),
+    doc.length = slam::row_sums(mat, na.rm = TRUE),
+    term.frequency = slam::col_sums(mat, na.rm = TRUE)
+  )
+}
+
+
+
+###Visualizar####
+serVis(topicmodels2LDAvis(lda_model),  out.dir = 'LDAvis', open.browser = interactive())
 
 
 
