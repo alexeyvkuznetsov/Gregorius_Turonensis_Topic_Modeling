@@ -10,6 +10,8 @@ textdata <- read.csv("data/sotu.csv", sep = ";", encoding = "UTF-8")
 
 sotu_corpus <- corpus(textdata$text, docnames = textdata$doc_id)
 
+
+
 # Build a dictionary of lemmas
 lemma_data <- read.csv("resources/baseform_en.tsv", encoding = "UTF-8")
 
