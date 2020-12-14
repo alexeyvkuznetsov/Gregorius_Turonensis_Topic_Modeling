@@ -12,3 +12,8 @@ https://github.com/trinker/topicmodels_learning/blob/master/functions/optimal_k.
 
 https://github.com/marcoguerzoni/jelcodes3
 
+
+
+https://github.com/juansokil/LatinR_2019
+https://github.com/juansokil/LatinR_2019/blob/master/02-Scripts/01-Topic%20Modelling.R
+
