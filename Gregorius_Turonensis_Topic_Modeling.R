@@ -191,7 +191,7 @@ textIds <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 lapply(historia$texts[textIds], as.character)
 
-tmResult <- posterior(topicModel)
+tmResult <- topicmodels::posterior(topicModel)
 
 theta <- tmResult$topics
 beta <- tmResult$terms
