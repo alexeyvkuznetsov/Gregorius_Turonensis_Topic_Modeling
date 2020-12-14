@@ -126,7 +126,7 @@ x <- as.data.frame(x)
 save(x,file="historia_annotated_dataset.Rda")
 
 
-#load("historia_annotated_dataset.Rda")
+load("historia_annotated_dataset.Rda")
 
 
 
@@ -270,7 +270,7 @@ topics(topicModel)
 
 
 
-lda_model <- topicmodels::LDA(dtm, k = 15, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+lda_model <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
 
 doc_topic_distr =
   lda_model$fit_transform(x = dtm, n_iter = 1000, 
@@ -280,6 +280,25 @@ doc_topic_distr =
 
 
 lda_model$plot()
+
+
+
+
+#LDAvis Jack_B
+
+library(LDAvis)
+# create the JSON object to feed the visualization:
+json <- createJSON(phi = t(apply(t(lda_model$topics) + eta, 2, function(x) x/sum(x))), 
+                   theta = t(apply(lda_model$document_sums + alpha, 2, function(x) x/sum(x))), 
+                   doc.length = ntoken(speechDfm), 
+                   vocab = colnames(speechDfm), 
+                   term.frequency = colSums(speechDfm))
+serVis(json, out.dir = "LDAvis", open.browser = TRUE)
+
+
+
+
+
 
 
 # Topics vizualization

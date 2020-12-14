@@ -1,5 +1,8 @@
 # https://lse-me314.github.io/assignment11/ME314_assignment11.html
 
+setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
+
+
 library(quanteda)
 library(topicmodels)
 library(lda)
@@ -8,17 +11,53 @@ library(stm)
 library(knitr)
 set.seed(221186)
 
-load("hoc_speeches.Rdata")
-
+#load("hoc_speeches.Rdata")
+load("historia_annotated_dataset.Rda")
 
 ## Create a corpus of speeches
-speechCorpus <- corpus(speeches$speech)
+lemmaCorpus <- corpus(x$lemma)
 
 ## Convert to dfm, removing some words that appear very regularly
-speechDfm <- dfm(speechCorpus, remove = c(stopwords("english"), "will", "hon", "right","people","government","can","friend","house","gentleman","said", "interruption", "prime", "minister", "secretary", "state"), stem = F)
+lemmaDfm <- dfm(myCorpus)
 
 ## Trim some rarely occuring words
 speechDfm <- dfm_trim(speechDfm, min_termfreq = 15, min_docfreq = 0.0015, docfreq_type = "prop")
+
+
+
+
+
+# Create a term-document matrix
+dtm <- as.matrix(dtm)
+tdm <- t(dtm)
+
+# Convert a DTM to a Character Vector of documents
+library(textmineR)
+dtm.to.docs <- textmineR::Dtm2Docs(dtm = dtm)
+
+
+## Convert dtm to a list of text
+dtm.to.docs <- apply(dtm, 1, function(x) {
+  paste(rep(names(x), x), collapse=" ")
+})
+
+## convert list of text to a Corpus
+
+myCorpus <- VCorpus(VectorSource(dtm.to.docs))
+inspect(myCorpus)
+
+# Created term-document matrix from corpus
+
+tdm <- TermDocumentMatrix(myCorpus)
+
+td_matrix <- as.matrix(tdm)
+
+
+
+
+
+
+
 
 
 
