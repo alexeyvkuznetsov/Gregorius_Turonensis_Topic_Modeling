@@ -23,6 +23,8 @@ speechDfm <- dfm_trim(speechDfm, min_termfreq = 15, min_docfreq = 0.0015, docfre
 # Convert to lda format
 speechDfmlda <- convert(speechDfm, to = "lda")
 
+#sdfm <- as.matrix(speechDfmlda)
+
 # MCMC and model tuning parameters:
 K <- 30 # Number of topics
 G <- 2000 # Number of iterations
@@ -41,3 +43,6 @@ fit <- lda.collapsed.gibbs.sampler(documents = speechDfmlda$documents, K = K,
 t2 <- Sys.time() # End timer
 
 t2 - t1  # about 10 minutes on Jack's MacBook Pro
+
+
+

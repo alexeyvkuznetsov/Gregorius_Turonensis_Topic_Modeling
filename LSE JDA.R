@@ -18,12 +18,14 @@ set.seed(221186)
 
 
 library(quanteda.corpora)
+library(quanteda.textmodels)
 install.packages("quanteda.corpora")
+install.packages("quanteda.textmodels") # Movie reviews
 
-data(data_corpus_movies, package = "quanteda.corpora")
+data(data_corpus_moviereviews, package = "quanteda.textmodels")
 
 # prepare the texts
-moviesDfm <- dfm(data_corpus_movies, remove = stopwords("en"), stem = FALSE, remove_punct = T, remove_numbers = T)
+moviesDfm <- dfm(data_corpus_moviereviews, remove = stopwords("en"), stem = FALSE, remove_punct = T, remove_numbers = T)
 moviesDfm <- dfm_trim(moviesDfm, min_termfreq = 5)
 
 # MCMC and model tuning parameters:
