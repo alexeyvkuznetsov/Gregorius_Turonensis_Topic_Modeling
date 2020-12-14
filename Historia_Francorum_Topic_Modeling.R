@@ -18,15 +18,7 @@ library(ggraph)
 library(ggplot2)
 library(tm)
 library(udpipe)
-library(text2vec)
-
-library(tm)
-library(XML)
-library(RCurl)
-library(plyr)
-library(lda)
 library(LDAvis)
-library(compiler)
 
 #t00<-paste(scan(file ="files/00.txt",what='character'),collapse=" ")
 t01<-paste(scan(file ="files/01.txt",what='character'),collapse=" ")
@@ -147,32 +139,92 @@ head(dtm_colsums(dtm))
 dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
 
 
+
+#########################################################################
+### TOPIC MODELING                                                    ###
+#########################################################################
+
+
+#library(topicmodels)
+
+
+lda_model <- topicmodels::LDA(dtm, k = 18, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+
+
+
+#########################################################################
+### TOPIC VISUALISATION                                               ###
+#########################################################################
+
+
+library(tidytext)
+library(ggplot2)
+library(dplyr)
+
+
+td_beta <- tidy(topicModel)
+td_beta %>%
+  group_by(topic) %>%
+  top_n(6, beta) %>%
+  ungroup() %>%
+  mutate(topic = paste0("Topic ", topic),
+         term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(term, beta, fill = as.factor(topic))) +
+  geom_col(alpha = 0.8, show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip() +
+  scale_x_reordered() +
+  labs(x = NULL, y = expression(beta),
+       title = "Наиболее часто встречающиеся слова для каждой темы")
+
+
+
+
+### Topic proportions https://tm4ss.github.io/docs/Tutorial_6_Topic_Models.html
+
+
+textIds <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+lapply(historia$texts[textIds], as.character)
+
+tmResult <- posterior(topicModel)
+
+theta <- tmResult$topics
+beta <- tmResult$terms
+topicNames <- apply(terms(topicModel, 7), 2, paste, collapse = " ")  
+
+attr(topicModel, "alpha")
+
+# load libraries for visualization
+
+library("reshape2")
+library("ggplot2")
+
+
+# get topic proportions form example documents
+
+N <- 10
+
+topicProportionExamples <- theta[textIds,]
+colnames(topicProportionExamples) <- topicNames
+vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(1:N)), variable.name = "topic", id.vars = "document")  
+
+ggplot(data = vizDataFrame, aes(topic, value, fill = document), ylab = "proportion") + 
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  
+  coord_flip() +
+  facet_wrap(~ document, ncol = N)
+
+
+
+
+#########################################################################
+### LDAvis VISUALISATION                                              ###
+#########################################################################
 # https://github.com/love-borjeson/tm_ws_cloud/blob/master/3_ling_filter.R
 # udpipe + LDAvis
 
 
-#remodel
-library(topicmodels)
-k = 19
-
-#the sampler, as before
-controlGibbs <- list(seed = 5683, #what does this mean?
-                     burnin = 200,
-                     iter = 500)
-
-
-lda_model <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
-
-
-
-model4 <- LDA(dtmKW, k, method = "Gibbs", control = controlGibbs) #Model...
-terms(model4,10) #Looks ok.
-#To fine-tune and add a (short) stoplist, use LDAvis as before.
-dtmKW <- dtm_remove_terms(dtmKW, terms = c("wtfe")) #This is what we need to develop.
-#remodel.....
-# and then visualize. If you do, you will notice that the LDA is symmetric with this approach as well.
-
-require(LDAvis)
 
 topicmodels2LDAvis <- function(x, ...){
   post <- topicmodels::posterior(x)
@@ -186,12 +238,21 @@ topicmodels2LDAvis <- function(x, ...){
     term.frequency = slam::col_sums(mat, na.rm = TRUE)
   )
 }
-serVis(topicmodels2LDAvis(lda_model))
 
-###Visualizar####
+require(LDAvis)
+
 serVis(topicmodels2LDAvis(lda_model),  out.dir = 'LDAvis', open.browser = interactive())
 
+serVis(topicmodels2LDAvis(lda_model))
 #servr::daemon_stop(1) # to stop the server 
+
+
+
+
+
+
+
+
 
 
 
@@ -371,96 +432,9 @@ topics(topicModel)
 
 lda_model <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
 
-doc_topic_distr =
-  lda_model$fit_transform(x = dtm, n_iter = 1000, 
-                          convergence_tol = 0.001, n_check_convergence = 25, 
-                          progressbar = TRUE)
 
 
 
-lda_model$plot()
-
-
-
-
-#LDAvis Jack_B
-
-library(LDAvis)
-# create the JSON object to feed the visualization:
-json <- createJSON(phi = t(apply(t(lda_model$topics) + eta, 2, function(x) x/sum(x))), 
-                   theta = t(apply(lda_model$document_sums + alpha, 2, function(x) x/sum(x))), 
-                   doc.length = ntoken(speechDfm), 
-                   vocab = colnames(speechDfm), 
-                   term.frequency = colSums(speechDfm))
-serVis(json, out.dir = "LDAvis", open.browser = TRUE)
-
-
-
-
-
-
-
-# Topics vizualization
-
-library(tidytext)
-library(ggplot2)
-library(dplyr)
-
-
-td_beta <- tidy(topicModel)
-td_beta %>%
-  group_by(topic) %>%
-  top_n(6, beta) %>%
-  ungroup() %>%
-  mutate(topic = paste0("Topic ", topic),
-         term = reorder_within(term, beta, topic)) %>%
-  ggplot(aes(term, beta, fill = as.factor(topic))) +
-  geom_col(alpha = 0.8, show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free") +
-  coord_flip() +
-  scale_x_reordered() +
-  labs(x = NULL, y = expression(beta),
-       title = "Наиболее часто встречающиеся слова для каждой темы")
-
-
-
-
-
-
-### Topic proportions https://tm4ss.github.io/docs/Tutorial_6_Topic_Models.html
-
-
-textIds <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-
-lapply(historia$texts[textIds], as.character)
-
-tmResult <- posterior(topicModel)
-
-theta <- tmResult$topics
-beta <- tmResult$terms
-topicNames <- apply(terms(topicModel, 7), 2, paste, collapse = " ")  
-
-attr(topicModel, "alpha")
-
-# load libraries for visualization
-
-library("reshape2")
-library("ggplot2")
-
-
-# get topic proportions form example documents
-
-N <- 10
-
-topicProportionExamples <- theta[textIds,]
-colnames(topicProportionExamples) <- topicNames
-vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(1:N)), variable.name = "topic", id.vars = "document")  
-
-ggplot(data = vizDataFrame, aes(topic, value, fill = document), ylab = "proportion") + 
-  geom_bar(stat="identity") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  
-  coord_flip() +
-  facet_wrap(~ document, ncol = N)
 
 
 
