@@ -32,7 +32,7 @@ dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 
 head(dtm_colsums(dtm))
 
-dtm <- dtm_remove_terms(dtm, terms = c("ann.", "childeberthus", "nomen", "tempus", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
+dtm <- dtm_remove_terms(dtm, terms = c("dies", "ann.", "childeberthus", "nomen", "tempus", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
 
 
 

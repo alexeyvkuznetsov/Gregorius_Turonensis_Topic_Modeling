@@ -140,7 +140,7 @@ dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 head(dtm_colsums(dtm))
 
 # ДОРАБОТАТЬ
-dtm <- dtm_remove_terms(dtm, terms = c("ann.", "childeberthus", "nomen", "tempus", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
+dtm <- dtm_remove_terms(dtm, terms = c("ann.", "childeberthus", "nomen", "tempus", "dies", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
 
 
 
@@ -152,7 +152,7 @@ dtm <- dtm_remove_terms(dtm, terms = c("ann.", "childeberthus", "nomen", "tempus
 #library(topicmodels)
 
 
-lda_model <- topicmodels::LDA(dtm, k = 18, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
+lda_model <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 4000, burnin = 100, best = TRUE, seed = 1:5, alpha = 0.02))
 
 topicModel <- lda_model
 
