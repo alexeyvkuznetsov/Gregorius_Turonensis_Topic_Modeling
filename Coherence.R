@@ -1,4 +1,9 @@
 
+#########################################################################
+### TOPIC COHERENCE SCORE                                             ###
+#########################################################################
+
+
 setwd("D:/GitHub/Gregorius_Turonensis_Topic_Modeling/")
 
 library(textmineR)
@@ -26,19 +31,18 @@ dtm <- dtm_remove_lowfreq(dtm, minfreq = 3)
 
 head(dtm_colsums(dtm))
 
-dtm <- dtm_remove_terms(dtm, terms = c("ann.", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
+dtm <- dtm_remove_terms(dtm, terms = c("ann.", "childeberthus", "nomen", "tempus", "ann", "an", "annus", "aer", "aes", "suus", "filius", "pater", "frater", "pars", "maldra", "theudericus", "hucusque", "hispanium", "caeter", "justinianus", "praelio", "cdxxxnum._rom.", "cdxinum._rom.", "cdxix", "op"))
 
 
 
 #########################################################################
 ### TOPIC COHERENCE SCORE                                             ###
 #########################################################################
-
 # https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25
 
 vocabulary <- dtf$term[ dtf$term_freq > 1 & dtf$doc_freq < nrow(dtm) / 2 ]
 
-k_list <- seq(2, 20, by = 1)
+k_list <- seq(2, 25, by = 1)
 model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
 if (!dir.exists(model_dir)) dir.create(model_dir)
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
