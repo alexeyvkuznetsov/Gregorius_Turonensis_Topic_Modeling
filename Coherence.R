@@ -84,7 +84,7 @@ ggplot(coherence_mat, aes(x = k, y = coherence)) +
 
 library(topicmodels)
 
-topicModel <- topicmodels::LDA(dtm, k = 19, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.02))
+topicModel <- topicmodels::LDA(dtm, k = 18, method = "Gibbs", control = list(nstart = 5, iter = 1000, burnin = 500, best = TRUE, seed = 1:5, alpha = 0.02))
 
 topics(topicModel)
 
