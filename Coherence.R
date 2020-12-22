@@ -117,3 +117,9 @@ FindTopicsNumber_plot(result)
 
 
 
+# log.likelihoods
+
+
+
+
+
